@@ -1,4 +1,10 @@
-import { register, collectDefaultMetrics, Counter, Histogram, Summary } from "prom-client";
+import {
+  register,
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  Summary
+} from "prom-client";
 import ResponseTime from "response-time";
 import logger from "./logger";
 import { Application, Request, Response, NextFunction } from "express";
@@ -48,7 +54,7 @@ export const histogram = new Histogram({
    */
   labelNames: ["a", "m", "p", "e"],
   // buckets for response time from 0.1s to 120s
-  buckets: [0.10, 0.5, 3, 30, 120]
+  buckets: [0.1, 0.5, 3, 30, 120]
 });
 
 /**
@@ -56,7 +62,9 @@ export const histogram = new Histogram({
  * and should be called from within in the main js file
  */
 export const startCollection = () => {
-  logger.info("Starting the collection of metrics, the metrics are available on /metrics");
+  logger.info(
+    "Starting the collection of metrics, the metrics are available on /metrics"
+  );
   collectDefaultMetrics();
 };
 
@@ -65,7 +73,11 @@ export const startCollection = () => {
  * the request side of an invocation
  * Currently it increments the counters for numOfPaths and pathsTaken
  */
-export const requestCounters = (req: Request, res: Response, next: NextFunction) => {
+export const requestCounters = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   if (req.path != "/metrics") {
     numOfRequests.inc({ method: req.method });
     pathsTaken.inc({ path: req.path });
@@ -78,11 +90,15 @@ export const requestCounters = (req: Request, res: Response, next: NextFunction)
  * executed on the response side of an invocation
  * Currently it updates the responses summary
  */
-export const responseCounters = ResponseTime((req: Request, res: Response, time) => {
-  if (req.url !== "/metrics") {
-    responses.labels(req.method, req.url, res.statusCode.toString()).observe(time);
+export const responseCounters = ResponseTime(
+  (req: Request, res: Response, time) => {
+    if (req.url !== "/metrics") {
+      responses
+        .labels(req.method, req.url, res.statusCode.toString())
+        .observe(time);
+    }
   }
-});
+);
 
 /**
  * In order to have Prometheus get the data
@@ -94,4 +110,3 @@ export const injectMetricsRoute = (app: Application) => {
     res.end(register.metrics());
   });
 };
-

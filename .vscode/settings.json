@@ -8,5 +8,20 @@
   },
   "typescript.referencesCodeLens.enabled": true,
   "tslint.ignoreDefinitionFiles": false,
-  "tslint.exclude": "**/node_modules/**/*"
+  "tslint.exclude": "**/node_modules/**/*",
+  "autoimport.doubleQuotes": true,
+  "editor.tabSize": 2,
+  "editor.minimap.enabled": false,
+  "prettier.arrowParens": "always",
+  "prettier.endOfLine": "lf",
+  "editor.formatOnSave": true,
+  "git.enableSmartCommit": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

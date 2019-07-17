@@ -3,14 +3,15 @@ import logger from "../util/logger";
 import { SamlInfo, parseSamlXml } from "../util/parse-saml-xml";
 
 export default function route(app: Application) {
-  app.post("/login", async (req: Request, res: Response, next: NextFunction) => {
-    const info = await parseSamlXml(req.body.SAMLResponse);
-    const session = req.session as Express.Session;
-    session.info = info;
-    console.log(JSON.stringify(info, undefined, 2));
-    // TODO: redirect to page...
-    res.send({Result: info});
-  });
+  app.post(
+    "/login",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const info = await parseSamlXml(req.body.SAMLResponse);
+      const session = req.session as Express.Session;
+      session.info = info;
+      res.send({ Result: info });
+    }
+  );
 
   app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
     const session = req.session as Express.Session;
@@ -27,8 +28,13 @@ export default function route(app: Application) {
 
   // TODO:
   app.post("/api", (req: Request, res: Response, next: NextFunction) => {
-    const { source, method, path, data } = req.body;
-    res.send("POST REQUEST");
+    const session = req.session as Express.Session;
+    const info = session.info as SamlInfo;
+    if (info) {
+      res.send(`${info.Name} is logged out.`);
+    } else {
+      const { source, method, requestType, path, data } = req.body;
+    }
   });
 
   // TODO: just a test

@@ -1,5 +1,5 @@
 // Main starting point of the application
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import compression from "compression";
 import lusca from "lusca";
 import bodyParser from "body-parser";
@@ -19,11 +19,11 @@ const app: Application = express();
 // App Setup
 app.use(helmet());
 app.use(morgan("combined"));
-app.use(session({secret: "abc", name: "session"}));
+app.use(session({ secret: "abc", name: "session" }));
 app.use(compression());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
-// app.use(bodyParser.json({ type: "*/*" }));
+app.use(bodyParser.json({ type: "*/*" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 router(app);
 
