@@ -1,0 +1,7 @@
+src
+.gitignore
+.travis.yml
+.eslintrc.yaml
+jest.config.js
+tsconfig.json
+tsling.json

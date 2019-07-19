@@ -1,0 +1,85 @@
+#Config file for K8S
+---
+apiVersion: extensions/v1beta1 
+kind: Deployment 
+metadata: 
+  name: {{ project }}-{{ role }}-{{ env_name }}
+  labels:
+    app: {{ project }}-{{ role }}-{{ env_name }}
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: {{ project }}-{{ role }}-{{ env_name }}
+  strategy: 
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate 
+  template: 
+    metadata: 
+      labels: 
+        app: {{ project }}-{{ role }}-{{ env_name }}
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        - name: NPM_CONFIG_LOGLEVEL
+          value: info
+        - name: TIGER_HOST
+          value: ${TIGER_HOST}
+        - name: GUARD_UI_HOST
+          value: ${GUARD_UI_HOST}
+        - name: MILL_UI_URI
+          value: ${TIGER_MILL_UI_URI}
+        - name: WEBSERVER_SESSION_SECRET
+          value: ${WEBSERVER_SESSION_SECRET}
+        - name: WEBSERVER_SESSION_MAX_AGE
+          value: ${WEBSERVER_SESSION_MAX_AGE}
+        - name: STATIC_CDN_PATH
+          value: ${STATIC_CDN}/${OSS_ENV}
+        image: {{ image_name }}
+        imagePullPolicy: Always 
+        name: {{ project }}-{{ role }}-{{ env_name }}
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - ${DNS_HOST_1}
+          - ${DNS_HOST_2}
+        searches:
+          - ${DNS_SEARCH_DOMAIN_NAME}
+        options:
+          - name: ndots
+            value: "2"
+          - name: use-vc 
+      imagePullSecrets:
+      - name: default-secret
+      nodeSelector:
+        envnode: ${ENV_NODE_LABEL}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/alicloud-loadbalancer-id: "${TIGER_LB_ID}"
+    service.beta.kubernetes.io/alicloud-loadbalancer-slb-network-type: "vpc"
+    service.beta.kubernetes.io/alicloud-loadbalancer-force-override-listeners: "false"
+  labels:
+    app: {{ project }}-{{ role }}-{{ env_name }}
+  name: {{ project }}-{{ role }}-{{ env_name }}
+spec:
+  selector:
+    app: {{ project }}-{{ role }}-{{ env_name }}
+  ports:
+  - name: "80"
+    port: 80
+    protocol: TCP
+    targetPort: 8087   
+  type: LoadBalancer
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 86400
+  externalTrafficPolicy: Local

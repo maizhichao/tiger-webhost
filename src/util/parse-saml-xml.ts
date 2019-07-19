@@ -1,6 +1,6 @@
 import { parseString } from "xml2js";
 
-export type SamlInfo = {
+export type SessionInfo = {
   Id: String;
   Name: String;
   SPID: String;
@@ -8,7 +8,7 @@ export type SamlInfo = {
   Language: String;
 };
 
-export async function parseSamlXml(samlResponse: any): Promise<SamlInfo> {
+export async function parseSamlXml(samlResponse: any): Promise<SessionInfo> {
   return new Promise((resolve, reject) => {
     const xml = new Buffer(samlResponse, "base64").toString("ascii");
     parseString(xml, (err, result) => {

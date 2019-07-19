@@ -1,50 +1,46 @@
 import { Application, Request, Response, NextFunction } from "express";
+import fs from "fs";
+import path from "path";
 import logger from "../util/logger";
-import { SamlInfo, parseSamlXml } from "../util/parse-saml-xml";
+import { SessionInfo } from "../util/parse-saml-xml";
+import authRoute from "./auth/auth-route";
+import htmlLoader from "../util/html-loader";
 
 export default function route(app: Application) {
-  app.post(
-    "/login",
-    async (req: Request, res: Response, next: NextFunction) => {
-      const info = await parseSamlXml(req.body.SAMLResponse);
-      const session = req.session as Express.Session;
-      session.info = info;
-      res.send({ Result: info });
-    }
-  );
+  authRoute(app);
 
-  app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+  app.get("/api", (req: Request, res: Response, next: NextFunction) => {
     const session = req.session as Express.Session;
-    const info = session.info as SamlInfo;
+    const info = session.info as SessionInfo;
     if (info) {
-      session.destroy(() => {
-        logger.info(`${info.Name} is logged out.`);
-      });
-      res.send(`${info.Name} is logged out.`);
-    } else {
-      res.send("Already logged out.");
-    }
-  });
-
-  // TODO:
-  app.post("/api", (req: Request, res: Response, next: NextFunction) => {
-    const session = req.session as Express.Session;
-    const info = session.info as SamlInfo;
-    if (info) {
-      res.send(`${info.Name} is logged out.`);
-    } else {
+      res.send(info);
       const { source, method, requestType, path, data } = req.body;
+      // TODO: interact with backend api
+    } else {
+      res.sendStatus(401);
     }
   });
 
-  // TODO: just a test
-  app.get("/", (req: Request, res: Response) => {
-    const session = req.session as Express.Session;
-    if (session.info) {
-      const info = session.info as SamlInfo;
-      res.send("Hello " + info.Name);
-    } else {
-      res.send("Not allowed");
-    }
+  app.get("/need-to-update-browser", (req: Request, res: Response) => {
+    fs.readFile(
+      path.resolve(__dirname, "../static/update-browser.html"),
+      (err, file) => {
+        const newFile = file.toString("utf8");
+        res.set("Content-Type", "text/html; charset=utf-8");
+        res.status(200).end(newFile);
+      }
+    );
+  });
+
+  app.get("*", (req: Request, res: Response) => {
+    res.set("Content-Type", "text/html; charset=utf-8");
+    htmlLoader
+      .get("http://localhost:1234/index.html")
+      .then((source) => {
+        res.status(200).end(source);
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
   });
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html
+	style="height:100%;overflow:hidden;background-color:#fbfbfb;font-family:Lantinghei sc,Microsoft YaHei Light,Microsoft YaHei!important">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>需要升级浏览器</title>
+</head>
+
+<body style="height:100%;margin:0;overflow:hidden;">
+	<table style="height:100%;width:100%;">
+		<tr>
+			<td style="text-align: center;">
+				<div style="width:500px;display:inline-block;">
+					<div style="font-size:20px;color:#464949;">您所使用的浏览器或浏览器版本<span
+							style="color:#000;font-weight:bold;">不兼容千里眼系统</span></div>
+					<div style="font-size:14px;color:#abafae;padding-top:20px;">建议您下载
+						<a style="font-size:14px;color:#abafae;"
+							href="http://down.tech.sina.com.cn/download/search.php?f_name=chrome" target="_blank">新版Chrome
+						</a>浏览器, 继续访问将导致部分内容无法正常显示
+					</div>
+					<a id="skip"
+						style="font-size:14px;color:#abafae;padding-top:100px;display:inline-block;text-decoration: none;"
+						href="javascript:skip()">继续访问</a>
+			</td>
+		</tr>
+	</table>
+	<script>
+		var appName = window.navigator.appName || "";
+		if (appName !== "Microsoft Internet Explorer") {
+			document.getElementById("skip").style.display = "block";
+		}
+
+		function skip() {
+			if (document.cookie !== undefined) {
+				document.cookie = "skip_detect=true; path=/";
+				var next = (window.location.hash.length > 1 && decodeURIComponent(window.location.hash.substring(1))) || "/";
+				location.href = next;
+			}
+		}
+	</script>
+</body>
+
+</html>
