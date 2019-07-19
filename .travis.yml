@@ -31,6 +31,7 @@ script:
   - yarn run build
   - echo -n "${PACKAGE_VERSION}" > version.txt
   - echo ${PACKAGE_VERSION}
+  - zip -r ./${ARTIFACT_NAME} ./ -x /node_modules/** -x /.git/** -x /.vscode/** -x /logs/**
   - ls -la
   - docker build -t $TAG .
 
