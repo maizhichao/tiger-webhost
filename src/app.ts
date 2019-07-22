@@ -8,11 +8,7 @@ import helmet from "helmet";
 import session from "express-session";
 import logger from "./util/logger";
 import router from "./router";
-import {
-  WEBSERVER_SESSION_SECRET,
-  WEBSERVER_SESSION_MAX_AGE,
-  PORT
-} from "./config";
+import { TIGER_SESSION_SECRET, TIGER_SESSION_MAX_AGE, PORT } from "./config";
 import * as Prometheus from "./util/prometheus";
 
 const app: Application = express();
@@ -22,9 +18,9 @@ app.use(helmet());
 app.use(morgan("combined"));
 app.use(
   session({
-    secret: WEBSERVER_SESSION_SECRET,
+    secret: TIGER_SESSION_SECRET,
     name: "session",
-    cookie: { maxAge: WEBSERVER_SESSION_MAX_AGE as number },
+    cookie: { maxAge: TIGER_SESSION_MAX_AGE as number },
     rolling: true,
     resave: false
   })

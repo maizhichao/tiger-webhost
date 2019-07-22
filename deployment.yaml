@@ -31,12 +31,10 @@ spec:
           value: ${TIGER_HOST}
         - name: GUARD_UI_HOST
           value: ${GUARD_UI_HOST}
-        - name: MILL_UI_URI
-          value: ${TIGER_MILL_UI_URI}
-        - name: WEBSERVER_SESSION_SECRET
-          value: ${WEBSERVER_SESSION_SECRET}
-        - name: WEBSERVER_SESSION_MAX_AGE
-          value: ${WEBSERVER_SESSION_MAX_AGE}
+        - name: TIGER_SESSION_SECRET
+          value: ${TIGER_SESSION_SECRET}
+        - name: TIGER_SESSION_MAX_AGE
+          value: ${TIGER_SESSION_MAX_AGE}
         - name: STATIC_CDN_PATH
           value: ${STATIC_CDN}/${OSS_ENV}
         image: {{ image_name }}
@@ -76,7 +74,7 @@ spec:
   - name: "80"
     port: 80
     protocol: TCP
-    targetPort: 8087   
+    targetPort: 8888   
   type: LoadBalancer
   sessionAffinity: ClientIP
   sessionAffinityConfig:

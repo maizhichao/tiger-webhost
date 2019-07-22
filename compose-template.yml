@@ -2,7 +2,7 @@
   restart: always
   image: "{DOCKER:IMAGE_FULL_NAME:Tiger}"
   ports:
-    - ${TIGER_LB_PORT}:8087
+    - 9081:8888
   dns:
     - "${DNS_HOST_1}"
     - "${DNS_HOST_2}"
@@ -15,12 +15,10 @@
     - NODE_ENV=production
     - NPM_CONFIG_LOGLEVEL=info
     - TIGER_HOST=${TIGER_HOST}
-    - WEBSERVER_SESSION_SECRET=${WEBSERVER_SESSION_SECRET}
-    - WEBSERVER_SESSION_MAX_AGE=${WEBSERVER_SESSION_MAX_AGE}
+    - TIGER_SESSION_SECRET=${TIGER_SESSION_SECRET}
+    - TIGER_SESSION_MAX_AGE=${TIGER_SESSION_MAX_AGE}
     - GUARD_UI_HOST=${GUARD_UI_HOST}
-    - MILL_UI_URI=${POP_MILL_UI_URL}
     - STATIC_CDN_PATH=${STATIC_CDN}/${OSS_ENV}
-    - constraint:aliyun.node_index==${TIGER_NODEINDEX}
   memswap_limit: 0
   memswap_reservation: 0
   kernel_memory: 0
@@ -29,4 +27,3 @@
   labels:
     aliyun.scale: "${TIGER_SCALE}"
     aliyun.log_store_tiger: "/opt/tiger/logs/*.log"
-    aliyun.lb.port_8087: "${TIGER_LB}"
