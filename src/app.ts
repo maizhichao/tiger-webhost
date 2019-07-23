@@ -22,7 +22,8 @@ app.use(
     name: "session",
     cookie: { maxAge: TIGER_SESSION_MAX_AGE as number },
     rolling: true,
-    resave: false
+    resave: false,
+    saveUninitialized: false
   })
 );
 app.use(compression());
