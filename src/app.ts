@@ -7,6 +7,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import session from "express-session";
 import redis from "redis";
+import cors from "cors";
 import connectRedis from "connect-redis";
 import logger from "./util/logger";
 import router from "./router";

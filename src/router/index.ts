@@ -36,7 +36,7 @@ export default function route(app: Application) {
   app.get("*", (req: Request, res: Response) => {
     res.set("Content-Type", "text/html; charset=utf-8");
     htmlLoader
-      .get(STATIC_CDN_PATH + "/index.html")
+      .get(STATIC_CDN_PATH + "/Panda/index.html")
       .then((source) => {
         res.status(200).end(source);
       })

@@ -3,7 +3,7 @@ const {
   TIGER_HOST: HOST = "http://localhost",
   TIGER_SESSION_SECRET = "P@ssw0rd",
   TIGER_SESSION_MAX_AGE = 10000,
-  STATIC_CDN_PATH = "https://se-test-static.energymost.com/test/panda/webui/stable",
+  STATIC_CDN_PATH = "https://se-test-static.energymost.com/test/module",
   TIGER_REDIS_SERVER: TIGER_REDIS_HOST = "r-bp15cb1344506784.redis.rds.aliyuncs.com",
   TIGER_REDIS_PORT = 6379,
   TIGER_REDIS_PWD = "NmP6HpG5N7gkY"

@@ -18,7 +18,7 @@
     - TIGER_SESSION_SECRET=${TIGER_SESSION_SECRET}
     - TIGER_SESSION_MAX_AGE=${TIGER_SESSION_MAX_AGE}
     - GUARD_UI_HOST=${GUARD_UI_HOST}
-    - STATIC_CDN_PATH=${STATIC_CDN}/${OSS_ENV}
+    - STATIC_CDN_PATH=${STATIC_CDN}/${OSS_ENV}/module
   memswap_limit: 0
   memswap_reservation: 0
   kernel_memory: 0
