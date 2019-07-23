@@ -20,7 +20,7 @@ app.use(
   session({
     secret: TIGER_SESSION_SECRET,
     name: "session",
-    cookie: { maxAge: TIGER_SESSION_MAX_AGE as number },
+    cookie: { maxAge: 120000 },
     rolling: true,
     resave: false,
     saveUninitialized: false
