@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import logger from "../util/logger";
 import { SessionInfo } from "../util/parse-saml-xml";
+import { STATIC_CDN_PATH } from "../config";
 import authRoute from "./auth/auth-route";
 import htmlLoader from "../util/html-loader";
 
@@ -35,7 +36,7 @@ export default function route(app: Application) {
   app.get("*", (req: Request, res: Response) => {
     res.set("Content-Type", "text/html; charset=utf-8");
     htmlLoader
-      .get("http://localhost:1234/index.html")
+      .get(STATIC_CDN_PATH + "/index.html")
       .then((source) => {
         res.status(200).end(source);
       })

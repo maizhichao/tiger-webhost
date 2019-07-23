@@ -3,7 +3,7 @@ const {
   TIGER_HOST: HOST = "http://localhost",
   TIGER_SESSION_SECRET = "P@ssw0rd",
   TIGER_SESSION_MAX_AGE = 10000,
-  STATIC_CDN_PATH = "http://localhost:4000"
+  STATIC_CDN_PATH = "https://se-test-static.energymost.com/test/panda/webui/stable"
 } = process.env;
 
 const PORT = 8888;

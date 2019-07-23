@@ -34,7 +34,7 @@ spec:
         - name: TIGER_SESSION_SECRET
           value: ${TIGER_SESSION_SECRET}
         - name: TIGER_SESSION_MAX_AGE
-          value: ${TIGER_SESSION_MAX_AGE}
+          value: '${TIGER_SESSION_MAX_AGE}'
         - name: STATIC_CDN_PATH
           value: ${STATIC_CDN}/${OSS_ENV}
         image: {{ image_name }}
