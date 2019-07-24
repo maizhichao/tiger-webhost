@@ -16,7 +16,14 @@ export default function route(app: Application) {
     if (info) {
       const { source, method, requestType, path, data } = req.body;
       // TODO: interact with backend api
-      request("http://t-cc.hz.ds.se.com/api/GetUserById/100107")
+      const options = {
+        uri: "http://t-cc.hz.ds.se.com/api/GetUserById/100107",
+        method: "GET",
+        headers: {
+          "content-type": "application/json"
+        }
+      };
+      request(options)
         .then((ret) => {
           res.send(ret);
         })
