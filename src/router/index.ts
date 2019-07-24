@@ -20,7 +20,7 @@ export default function route(app: Application) {
         uri: "http://t-cc.hz.ds.se.com/api/GetUserById/100107",
         method: "GET",
         headers: {
-          "content-type": "application/json"
+          "Content-Type": "application/json"
         }
       };
       request(options)
