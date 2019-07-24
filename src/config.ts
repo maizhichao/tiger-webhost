@@ -1,6 +1,6 @@
 const {
   GUARD_UI_HOST = "https://passport-pft.energymost.com/",
-  TIGER_HOST: HOST = "http://localhost",
+  TIGER_HOST,
   TIGER_SESSION_SECRET = "P@ssw0rd",
   TIGER_SESSION_MAX_AGE = 10000,
   STATIC_CDN_PATH = "https://se-test-static.energymost.com/test/module",
@@ -10,8 +10,11 @@ const {
 } = process.env;
 
 const PORT = 8888;
-const DEFAULT_SP = "sp1";
-const WEB_HOST = HOST + ":" + PORT;
+const DEFAULT_SP = "tiger";
+const WEB_HOST =
+  process.env.NODE_ENV === "production"
+    ? `https://${TIGER_HOST}:${PORT}`
+    : `http://localhost:${PORT}`;
 const STATIC_PATH = __dirname + "/static";
 export {
   GUARD_UI_HOST,

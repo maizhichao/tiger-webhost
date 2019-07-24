@@ -21,42 +21,38 @@ import {
 import * as Prometheus from "./util/prometheus";
 
 const app: Application = express();
+app.set("trust proxy", 1);
 
 // Session Setup
+const redisClient = redis.createClient({
+  host: TIGER_REDIS_HOST,
+  port: TIGER_REDIS_PORT as number,
+  password: TIGER_REDIS_PWD
+});
+redisClient.on("error", (err) => {
+  logger.error("Redis Error", err);
+});
+const redisStore = connectRedis(session);
+const store = new redisStore({
+  host: TIGER_REDIS_HOST,
+  port: TIGER_REDIS_PORT as number,
+  pass: TIGER_REDIS_PWD,
+  client: redisClient
+});
 const sessionConfig: session.SessionOptions = {
   secret: TIGER_SESSION_SECRET,
   name: "session",
-  cookie: { maxAge: 30 * 60 * 100 /* 30 minutes */ },
+  cookie: {
+    maxAge: 30 * 60 * 100 /* 30 minutes */,
+    secure: true
+  },
   rolling: true,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: store
 };
-if (process.env.NODE_ENV === "production") {
-  const redisClient = redis.createClient({
-    host: TIGER_REDIS_HOST,
-    port: TIGER_REDIS_PORT as number,
-    password: TIGER_REDIS_PWD
-  });
-  redisClient.on("error", (err) => {
-    logger.error("Redis Error", err);
-  });
-  const redisStore = connectRedis(session);
-  const store = new redisStore({
-    host: TIGER_REDIS_HOST,
-    port: TIGER_REDIS_PORT as number,
-    pass: TIGER_REDIS_PWD,
-    client: redisClient
-  });
-  app.set("trust proxy", 1);
-  sessionConfig.cookie = {
-    ...sessionConfig.cookie,
-    secure: true
-  };
-  sessionConfig.store = store;
-}
 
 // App Setup
-
 app.use(helmet());
 app.use(morgan("combined"));
 app.use(session(sessionConfig));

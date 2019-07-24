@@ -17,7 +17,7 @@ const sso = {
   )
 };
 
-const extractSpDomain = false
+const extractSpDomain = PRODUCTION
   ? ({ hostname }: Request) => hostname.split(".")[0] || ""
   : () => DEFAULT_SP;
 
