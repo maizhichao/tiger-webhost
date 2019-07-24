@@ -13,7 +13,7 @@ const PORT = 8888;
 const DEFAULT_SP = "tiger";
 const WEB_HOST =
   process.env.NODE_ENV === "production"
-    ? `https://${TIGER_HOST}:${PORT}`
+    ? `https://${TIGER_HOST}`
     : `http://localhost:${PORT}`;
 const STATIC_PATH = __dirname + "/static";
 export {
