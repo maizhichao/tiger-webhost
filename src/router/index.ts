@@ -1,11 +1,11 @@
 import { Application, Request, Response, NextFunction } from "express";
+import request from "request-promise";
 import fs from "fs";
 import path from "path";
 import logger from "../util/logger";
 import { SessionInfo } from "../util/parse-saml-xml";
 import { STATIC_CDN_PATH } from "../config";
 import authRoute from "./auth/auth-route";
-import htmlLoader from "../util/html-loader";
 
 export default function route(app: Application) {
   authRoute(app);
@@ -34,11 +34,10 @@ export default function route(app: Application) {
   });
 
   app.get("*", (req: Request, res: Response) => {
-    res.set("Content-Type", "text/html; charset=utf-8");
-    htmlLoader
-      .get(STATIC_CDN_PATH + "/Panda/index.html")
-      .then((source) => {
-        res.status(200).end(source);
+    request(STATIC_CDN_PATH + "/Panda/index.html")
+      .then((html) => {
+        res.set("Content-Type", "text/html; charset=utf-8");
+        res.status(200).end(html);
       })
       .catch((err) => {
         logger.error(err);
