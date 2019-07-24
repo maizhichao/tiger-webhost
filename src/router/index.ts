@@ -14,9 +14,15 @@ export default function route(app: Application) {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
     if (info) {
-      res.send(info);
       const { source, method, requestType, path, data } = req.body;
       // TODO: interact with backend api
+      request("http://t-cc.hz.ds.se.com/api/GetUserById/100107")
+        .then((ret) => {
+          res.send(ret);
+        })
+        .catch((err) => {
+          logger.error("Failed to call api:", err);
+        });
     } else {
       res.sendStatus(401);
     }
