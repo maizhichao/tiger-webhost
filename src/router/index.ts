@@ -28,7 +28,8 @@ export default function route(app: Application) {
           res.send(ret);
         })
         .catch((err) => {
-          logger.error("Failed to call api:", err);
+          logger.error(err);
+          res.send(err);
         });
     } else {
       res.sendStatus(401);
@@ -54,6 +55,7 @@ export default function route(app: Application) {
       })
       .catch((err) => {
         logger.error(err);
+        res.sendStatus(404);
       });
   });
 }
