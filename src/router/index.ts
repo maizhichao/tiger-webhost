@@ -13,27 +13,29 @@ export default function route(app: Application) {
   app.get("/api", (req: Request, res: Response, next: NextFunction) => {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
-    if (info) {
-      const { source, method, requestType, path, data } = req.body;
-      // TODO: interact with backend api
-      const options = {
-        uri: "http://t-cc.hz.ds.se.com/api/GetUserById/100107",
-        method: "GET",
-        headers: {
-          Accept: "application/json"
-        }
-      };
-      request(options)
-        .then((ret) => {
-          res.send(ret);
-        })
-        .catch((err) => {
-          logger.error(err);
-          res.send(err);
-        });
-    } else {
+    if (!info) {
       res.sendStatus(401);
+      return;
     }
+    const { source, method, requestType, path, data } = req.body;
+    // TODO: interact with backend api
+    const options = {
+      method: "GET",
+      uri: "http://t-cc.hz.ds.se.com/api/user/GetUserById/100107",
+      json: true,
+      headers: {
+        Accept: "application/json"
+      },
+      resolveWithFullResponse: true
+    };
+    request(options)
+      .then((ret) => {
+        res.send(ret);
+      })
+      .catch((err) => {
+        logger.error(err);
+        res.send(err);
+      });
   });
 
   app.get("/need-to-update-browser", (req: Request, res: Response) => {
