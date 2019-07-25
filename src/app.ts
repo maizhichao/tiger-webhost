@@ -6,60 +6,31 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import session from "express-session";
-import redis from "redis";
-import cors from "cors";
-import connectRedis from "connect-redis";
-import logger from "./util/logger";
+import logger from "./logger";
 import router from "./router";
-import {
-  TIGER_SESSION_SECRET,
-  TIGER_REDIS_HOST,
-  TIGER_REDIS_PORT,
-  TIGER_REDIS_PWD,
-  PORT
-} from "./config";
-import * as Prometheus from "./util/prometheus";
+import { PORT } from "./config";
+import sessionOptions from "./session/session-options";
+import * as Prometheus from "./prometheus/prometheus";
 
 const app: Application = express();
-app.set("trust proxy", 1);
-
-// Session Setup
-const redisClient = redis.createClient({
-  host: TIGER_REDIS_HOST,
-  port: TIGER_REDIS_PORT as number,
-  password: TIGER_REDIS_PWD
-});
-redisClient.on("error", (err) => {
-  logger.error("Redis Error", err);
-});
-const redisStore = connectRedis(session);
-const store = new redisStore({
-  host: TIGER_REDIS_HOST,
-  port: TIGER_REDIS_PORT as number,
-  pass: TIGER_REDIS_PWD,
-  client: redisClient
-});
-const sessionConfig: session.SessionOptions = {
-  secret: TIGER_SESSION_SECRET,
-  name: "session",
-  cookie: {
-    maxAge: 30 * 60 * 100 /* 30 minutes */,
-    secure: true
-  },
-  rolling: true,
-  resave: false,
-  saveUninitialized: false,
-  store: store
-};
 
 // App Setup
+app.set("trust proxy", 1);
 app.use(helmet());
-app.use(morgan("combined"));
-app.use(session(sessionConfig));
+app.use(
+  morgan("combined", {
+    skip: function(_req, res) {
+      return res.statusCode < 400;
+    }
+  })
+);
+app.use(session(sessionOptions));
 app.use(compression());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 router(app);
 
 // Server Setup

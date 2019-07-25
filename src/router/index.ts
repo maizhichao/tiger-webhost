@@ -2,39 +2,45 @@ import { Application, Request, Response, NextFunction } from "express";
 import request from "request-promise";
 import fs from "fs";
 import path from "path";
-import logger from "../util/logger";
-import { SessionInfo } from "../util/parse-saml-xml";
+import logger from "../logger";
+import { SourceMap } from "../source-map";
+import { SessionInfo } from "./auth/parse-saml-xml";
 import { STATIC_CDN_PATH } from "../config";
 import authRoute from "./auth/auth-route";
 
 export default function route(app: Application) {
   authRoute(app);
 
-  app.get("/api", (req: Request, res: Response, next: NextFunction) => {
+  app.post("/api", (req: Request, res: Response, next: NextFunction) => {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
     if (!info) {
       res.sendStatus(401);
       return;
     }
-    const { source, method, requestType, path, data } = req.body;
-    // TODO: interact with backend api
-    const options = {
-      method: "GET",
-      uri: "http://t-cc.hz.ds.se.com/api/user/GetUserById/100107",
-      json: true,
+    const { source, url, method = "GET", data } = req.body;
+    const target = SourceMap[source];
+    if (!target || !url) {
+      res.status(400).send("Bad request: Missing [source] or [url] definition");
+    }
+    request({
+      method: method,
+      uri: `${target}/${url}`,
+      body: {
+        ...data
+      },
       headers: {
         Accept: "application/json"
       },
+      json: true,
       resolveWithFullResponse: true
-    };
-    request(options)
+    })
       .then((ret) => {
         res.send(ret);
       })
       .catch((err) => {
         logger.error(err);
-        res.send(err);
+        res.status(500).send(err);
       });
   });
 

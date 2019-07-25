@@ -3,8 +3,8 @@ import fs from "fs";
 import { URL } from "url";
 import { ServiceProvider, IdentityProvider } from "samlify";
 import { GUARD_UI_HOST, DEFAULT_SP, STATIC_PATH, WEB_HOST } from "../../config";
-import { SessionInfo, parseSamlXml } from "../../util/parse-saml-xml";
-import logger from "../../util/logger";
+import { SessionInfo, parseSamlXml } from "./parse-saml-xml";
+import logger from "../../logger";
 
 const PRODUCTION = process.env.NODE_ENV === "production";
 const sso = {

@@ -6,7 +6,7 @@ import {
   Summary
 } from "prom-client";
 import ResponseTime from "response-time";
-import logger from "./logger";
+import logger from "../logger";
 import { Application, Request, Response, NextFunction } from "express";
 
 /**
