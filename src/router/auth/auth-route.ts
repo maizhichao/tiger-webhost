@@ -70,19 +70,15 @@ export default function authRoute(app: Application) {
   app.get("/:lang/logout", (req: Request, res: Response) => {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
-    if (info) {
-      session.destroy(() => {
-        logger.info(`${info.Name} is logged out.`);
-      });
-      return res.redirect(
-        GUARD_UI_HOST +
-          req.params.lang +
-          "/logout?returnURL=" +
-          encodeURIComponent(req.query.returnURL)
-      );
-    } else {
-      res.redirect(req.query.returnURL);
-    }
+    session.destroy(() => {
+      logger.info(`${info.Name} is logged out.`);
+    });
+    return res.redirect(
+      GUARD_UI_HOST +
+        req.params.lang +
+        "/logout?returnURL=" +
+        encodeURIComponent(req.query.returnURL)
+    );
   });
 
   app.get("/:lang/changepwd", (req: Request, res: Response) => {
