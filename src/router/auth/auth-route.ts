@@ -63,6 +63,7 @@ export default function authRoute(app: Application) {
       session.info = info;
       res.redirect(callbackURL);
     } catch (err) {
+      logger.error("Failed to login:", err);
       res.redirect(callbackURL);
     }
   });
