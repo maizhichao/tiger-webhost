@@ -1,5 +1,6 @@
 const {
   AMMO_HOST = "http://f-am.hz.ds.se.com",
+  ANION_HOST = "http://f-on.hz.ds.se.com",
   BAND_HOST = "http://t-bd.hz.ds.se.com",
   CLASSIC2_HOST = "http://t-cc.hz.ds.se.com",
   DRUM_GQL_URI = "https://ds-api-test.energymost.com",
@@ -34,6 +35,7 @@ const {
 
 export const SourceMap: { [key: string]: string } = {
   AMMO: AMMO_HOST,
+  ANION: ANION_HOST,
   BAND: BAND_HOST,
   CLASSIC: CLASSIC2_HOST,
   DRUM_GQL: DRUM_GQL_URI,
