@@ -9,19 +9,13 @@ import session from "express-session";
 import logger from "./logger";
 import router from "./router";
 import cors from "cors";
-import { PORT, TIGER_CORS } from "./config";
+import { PORT, TIGER_PRE_RELEASE } from "./config";
 import sessionOptions from "./session/session-options";
 import * as Prometheus from "./prometheus/prometheus";
 
 const app: Application = express();
 
 // App Setup
-app.set("trust proxy", 1);
-
-if (TIGER_CORS) {
-  app.use(cors());
-}
-app.use(helmet());
 app.use(
   morgan("combined", {
     skip: function(_req, res) {
@@ -29,10 +23,18 @@ app.use(
     }
   })
 );
+
+if (TIGER_PRE_RELEASE) {
+  app.use(cors());
+} else {
+  app.set("trust proxy", 1);
+  app.use(helmet());
+  app.use(lusca.xframe("SAMEORIGIN"));
+  app.use(lusca.xssProtection(true));
+}
+
 app.use(session(sessionOptions));
 app.use(compression());
-app.use(lusca.xframe("SAMEORIGIN"));
-app.use(lusca.xssProtection(true));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

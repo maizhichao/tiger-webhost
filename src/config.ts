@@ -7,7 +7,7 @@ const {
   TIGER_REDIS_SERVER: TIGER_REDIS_HOST = "r-bp15cb1344506784.redis.rds.aliyuncs.com",
   TIGER_REDIS_PORT = 6379,
   TIGER_REDIS_PWD = "NmP6HpG5N7gkY",
-  TIGER_CORS = true
+  TIGER_PRE_RELEASE = true
 } = process.env;
 
 const PORT = 8888;
@@ -29,5 +29,5 @@ export {
   TIGER_REDIS_HOST,
   TIGER_REDIS_PORT,
   TIGER_REDIS_PWD,
-  TIGER_CORS
+  TIGER_PRE_RELEASE
 };
