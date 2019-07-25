@@ -8,6 +8,7 @@ import helmet from "helmet";
 import session from "express-session";
 import logger from "./logger";
 import router from "./router";
+import cors from "cors";
 import { PORT } from "./config";
 import sessionOptions from "./session/session-options";
 import * as Prometheus from "./prometheus/prometheus";
@@ -16,6 +17,11 @@ const app: Application = express();
 
 // App Setup
 app.set("trust proxy", 1);
+
+// TODO: CORS needs to be set in test env.
+// if (process.env.CORS) {
+app.use(cors());
+// }
 app.use(helmet());
 app.use(
   morgan("combined", {
