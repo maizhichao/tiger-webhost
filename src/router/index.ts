@@ -25,7 +25,7 @@ export default function route(app: Application) {
     }
     request({
       method: method,
-      uri: `${target}/${url}`,
+      uri: target + url,
       body: {
         ...data
       },
