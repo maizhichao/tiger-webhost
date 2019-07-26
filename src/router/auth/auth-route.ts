@@ -24,10 +24,11 @@ const extractSpDomain = PRODUCTION
 export default function authRoute(app: Application) {
   app.get("/:lang/login", (req: Request, res: Response) => {
     try {
-      const { callbackURL, sysId } = req.query;
+      const { sysId } = req.query;
+      const { referer } = req.headers;
       const lang = req.params.lang;
       const spDomain = extractSpDomain(req);
-      const ssoAcsURL = `${WEB_HOST}/${lang}/sso/acs?callbackURL=${callbackURL}`;
+      const ssoAcsURL = `${WEB_HOST}/${lang}/sso/acs?callbackURL=${referer}`;
       const sp = ServiceProvider({
         privateKey: sso.privateKey,
         privateKeyPass: sso.privateKeyPass,
@@ -44,7 +45,7 @@ export default function authRoute(app: Application) {
       return res.redirect(
         redirectURL.href +
           "&callbackURL=" +
-          encodeURIComponent(callbackURL) +
+          encodeURIComponent(referer as string) +
           "&sysId=" +
           sysId +
           "&spDomain=" +
@@ -72,7 +73,7 @@ export default function authRoute(app: Application) {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
     session.destroy(() => {
-      logger.info(`${info.Name} is logged out.`);
+      logger.info(info && `${info.Name} is logged out.`);
     });
     return res.redirect(
       GUARD_UI_HOST +

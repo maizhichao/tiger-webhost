@@ -1,6 +1,7 @@
 // Main starting point of the application
 import express, { Application } from "express";
 import compression from "compression";
+import path from "path";
 import lusca from "lusca";
 import bodyParser from "body-parser";
 import morgan from "morgan";
@@ -25,14 +26,19 @@ app.use(
 );
 
 if (TIGER_PRE_RELEASE) {
-  app.use(cors());
-} else {
-  app.set("trust proxy", 1);
-  app.use(helmet());
-  app.use(lusca.xframe("SAMEORIGIN"));
-  app.use(lusca.xssProtection(true));
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        callback(null, true);
+      },
+      credentials: true
+    })
+  );
 }
-
+app.set("trust proxy", 1);
+app.use(helmet());
+app.use(lusca.xframe("SAMEORIGIN"));
+app.use(lusca.xssProtection(true));
 app.use(session(sessionOptions));
 app.use(compression());
 app.use(bodyParser.json());
