@@ -2,7 +2,13 @@ import { Application, Request, Response, NextFunction } from "express";
 import fs from "fs";
 import { URL } from "url";
 import { ServiceProvider, IdentityProvider } from "samlify";
-import { GUARD_UI_HOST, DEFAULT_SP, STATIC_PATH, WEB_HOST } from "../../config";
+import {
+  GUARD_UI_HOST,
+  DEFAULT_SP,
+  STATIC_PATH,
+  WEB_HOST,
+  TIGER_PRE_RELEASE
+} from "../../config";
 import { SessionInfo, parseSamlXml } from "./parse-saml-xml";
 import logger from "../../logger";
 
@@ -26,9 +32,12 @@ export default function authRoute(app: Application) {
     try {
       const { sysId } = req.query;
       const { referer } = req.headers;
+      const origin = new URL(referer as string).origin;
       const lang = req.params.lang;
       const spDomain = extractSpDomain(req);
-      const ssoAcsURL = `${WEB_HOST}/${lang}/sso/acs?callbackURL=${referer}`;
+      const ssoAcsURL = `${origin}/${lang}/sso/acs?callbackURL=${referer}`;
+
+      console.log("TCL: authRoute -> ssoAcsURL", ssoAcsURL);
       const sp = ServiceProvider({
         privateKey: sso.privateKey,
         privateKeyPass: sso.privateKeyPass,
@@ -55,6 +64,20 @@ export default function authRoute(app: Application) {
       res.sendStatus(404);
     }
   });
+
+  if (TIGER_PRE_RELEASE) {
+    app.post("/dev-server-login", async (req: Request, res: Response) => {
+      try {
+        const info = await parseSamlXml(req.body.SAMLResponse);
+        const session = req.session as Express.Session;
+        session.info = info;
+        res.status(200).send("OK");
+      } catch (err) {
+        logger.error("Failed to login:", err);
+        res.status(401).send("Failed to login");
+      }
+    });
+  }
 
   app.post("/:lang/sso/acs", async (req: Request, res: Response) => {
     const { callbackURL } = req.query;
