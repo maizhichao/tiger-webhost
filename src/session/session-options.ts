@@ -6,8 +6,7 @@ import {
   TIGER_SESSION_SECRET,
   TIGER_REDIS_HOST,
   TIGER_REDIS_PORT,
-  TIGER_REDIS_PWD,
-  TIGER_PRE_RELEASE
+  TIGER_REDIS_PWD
 } from "../config";
 
 const redisClient = redis.createClient({
@@ -39,7 +38,4 @@ const sessionOptions: session.SessionOptions = {
   store: store
 };
 
-if (TIGER_PRE_RELEASE) {
-  (sessionOptions.cookie as any).secure = false;
-}
 export default sessionOptions;

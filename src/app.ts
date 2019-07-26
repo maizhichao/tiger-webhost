@@ -25,6 +25,14 @@ app.use(
   })
 );
 
+app.set("trust proxy", 1);
+app.use(helmet());
+app.use(lusca.xframe("SAMEORIGIN"));
+app.use(lusca.xssProtection(true));
+app.use(session(sessionOptions));
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 if (TIGER_PRE_RELEASE) {
   app.use(
     cors({
@@ -34,15 +42,8 @@ if (TIGER_PRE_RELEASE) {
       credentials: true
     })
   );
+  (sessionOptions.cookie as any).secure = false;
 }
-app.set("trust proxy", 1);
-app.use(helmet());
-app.use(lusca.xframe("SAMEORIGIN"));
-app.use(lusca.xssProtection(true));
-app.use(session(sessionOptions));
-app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 router(app);
 
