@@ -1,8 +1,8 @@
 const {
   AMMO_HOST = "http://f-am.hz.ds.se.com",
-  ANION_HOST = "http://f-on.hz.ds.se.com",
+  ANION_HOST = "http://172.26.68.21",
   BAND_HOST = "http://t-bd.hz.ds.se.com",
-  CLASSIC2_HOST = "http://t-cc.hz.ds.se.com",
+  CLASSIC2_HOST = "http://172.26.67.28",
   DRUM_GQL_URI = "https://ds-api-test.energymost.com",
   ELECTRONIC_APP_HOST = "http://test-di-app.hz.ds.se.com/test/electronic/apphost",
   ELECTRONIC_UI_DOCKER_API_BASE_PATH = "https://web-api-test.itm.energymost.com",

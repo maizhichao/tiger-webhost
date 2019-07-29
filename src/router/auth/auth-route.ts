@@ -36,8 +36,6 @@ export default function authRoute(app: Application) {
       const lang = req.params.lang;
       const spDomain = extractSpDomain(req);
       const ssoAcsURL = `${WEB_HOST}/${lang}/sso/acs?callbackURL=${referer}`;
-
-      console.log("TCL: authRoute -> ssoAcsURL", ssoAcsURL);
       const sp = ServiceProvider({
         privateKey: sso.privateKey,
         privateKeyPass: sso.privateKeyPass,
