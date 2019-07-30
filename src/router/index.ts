@@ -30,10 +30,10 @@ export default function route(app: Application) {
         ...data
       },
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
+        session: info
       },
-      json: true,
-      resolveWithFullResponse: true
+      json: true
     })
       .then((ret) => {
         res.send(ret);

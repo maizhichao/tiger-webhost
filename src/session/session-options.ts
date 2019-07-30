@@ -29,7 +29,7 @@ const sessionOptions: session.SessionOptions = {
   secret: TIGER_SESSION_SECRET,
   name: "session",
   cookie: {
-    maxAge: 60 * 60 * 100 /* 60 minutes */,
+    maxAge: 30 * 60 * 1000 /* 30 minutes */,
     secure: true
   },
   rolling: true,
