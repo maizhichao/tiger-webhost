@@ -4,13 +4,13 @@ import connectRedis from "connect-redis";
 import logger from "../logger";
 import {
   TIGER_SESSION_SECRET,
-  TIGER_REDIS_HOST,
+  TIGER_REDIS_SERVER,
   TIGER_REDIS_PORT,
   TIGER_REDIS_PWD
 } from "../config";
 
 const redisClient = redis.createClient({
-  host: TIGER_REDIS_HOST,
+  host: TIGER_REDIS_SERVER,
   port: TIGER_REDIS_PORT as number,
   password: TIGER_REDIS_PWD
 });
@@ -19,7 +19,7 @@ redisClient.on("error", (err) => {
 });
 const redisStore = connectRedis(session);
 const store = new redisStore({
-  host: TIGER_REDIS_HOST,
+  host: TIGER_REDIS_SERVER,
   port: TIGER_REDIS_PORT as number,
   pass: TIGER_REDIS_PWD,
   client: redisClient
@@ -30,7 +30,7 @@ const sessionOptions: session.SessionOptions = {
   name: "session",
   cookie: {
     maxAge: 30 * 60 * 1000 /* 30 minutes */,
-    secure: true
+    secure: process.env.NODE_ENV === "production"
   },
   rolling: true,
   resave: false,

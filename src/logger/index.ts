@@ -7,10 +7,6 @@ const logger = createLogger({
     new winston.transports.Console({
       level: PRODUCTION ? "error" : "debug"
     })
-    // new winston.transports.File({
-    //   filename: "debug.log",
-    //   level: PRODUCTION ? "error" : "debug"
-    // })
   ]
 });
 

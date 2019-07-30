@@ -8,8 +8,7 @@ import helmet from "helmet";
 import session from "express-session";
 import logger from "./logger";
 import router from "./router";
-import cors from "cors";
-import { PORT, TIGER_PRE_RELEASE } from "./config";
+import { PORT } from "./config";
 import sessionOptions from "./session/session-options";
 import * as Prometheus from "./prometheus/prometheus";
 
@@ -23,24 +22,10 @@ app.use(
     }
   })
 );
-
-if (TIGER_PRE_RELEASE) {
-  app.use(
-    cors({
-      origin: (origin, callback) => {
-        callback(null, true);
-      },
-      credentials: true
-    })
-  );
-  (sessionOptions.cookie as any).secure = false;
-} else {
-  app.set("trust proxy", 1);
-  app.use(helmet());
-  app.use(lusca.xframe("SAMEORIGIN"));
-  app.use(lusca.xssProtection(true));
-}
-
+app.set("trust proxy", 1);
+app.use(helmet());
+app.use(lusca.xframe("SAMEORIGIN"));
+app.use(lusca.xssProtection(true));
 app.use(session(sessionOptions));
 app.use(compression());
 app.use(bodyParser.json());
