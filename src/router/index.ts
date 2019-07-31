@@ -9,8 +9,6 @@ import { STATIC_CDN_PATH } from "../config";
 import authRoute from "./auth/auth-route";
 
 export default function route(app: Application) {
-  authRoute(app);
-
   app.post("/api", (req: Request, res: Response, next: NextFunction) => {
     const session = req.session as Express.Session;
     const info = session.info as SessionInfo;
@@ -31,7 +29,7 @@ export default function route(app: Application) {
       },
       headers: {
         Accept: "application/json",
-        session: info
+        "X-Session": info
       },
       json: true
     })
@@ -44,6 +42,8 @@ export default function route(app: Application) {
       });
   });
 
+  authRoute(app);
+
   app.get("/need-to-update-browser", (req: Request, res: Response) => {
     fs.readFile(
       path.resolve(__dirname, "../static/update-browser.html"),
@@ -55,7 +55,7 @@ export default function route(app: Application) {
     );
   });
 
-  app.get("*", (req: Request, res: Response) => {
+  app.get("/*", (req: Request, res: Response) => {
     request(STATIC_CDN_PATH + "/Panda/index.html")
       .then((html) => {
         res.set("Content-Type", "text/html; charset=utf-8");

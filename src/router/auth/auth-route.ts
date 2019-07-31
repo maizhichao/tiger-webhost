@@ -1,4 +1,4 @@
-import { Application, Request, Response, NextFunction } from "express";
+import { Application, Request, Response } from "express";
 import fs from "fs";
 import { URL } from "url";
 import { ServiceProvider, IdentityProvider } from "samlify";
@@ -26,7 +26,6 @@ export default function authRoute(app: Application) {
     try {
       const { sysId } = req.query;
       const { referer } = req.headers;
-      const origin = new URL(referer as string).origin;
       const lang = req.params.lang;
       const spDomain = extractSpDomain(req);
       const ssoAcsURL = `${WEB_HOST}/${lang}/sso/acs?callbackURL=${referer}`;
