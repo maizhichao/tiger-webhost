@@ -7,7 +7,7 @@ const {
   ELECTRONIC_APP_HOST = "http://172.26.67.35/test/electronic/apphost",
   ELECTRONIC_UI_DOCKER_API_BASE_PATH = "https://web-api-test.itm.energymost.com",
   FLUTE_HOST = "http://172.26.67.52",
-  FOLK_HOST = "https://wss-test.energymost.com",
+  FOLK_HOST = "http://172.26.67.56:80",
   FORT_HOST = "http://172.26.67.48",
   FUNK_APP_HOST = "http://172.26.67.36/test/funk/apphost",
   FUNK_UI_DOCKER_API_BASE_PATH = "https://web-api-test.da.energymost.com",

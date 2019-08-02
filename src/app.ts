@@ -7,7 +7,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import session from "express-session";
 import logger from "./logger";
-import router from "./router";
+import route from "./route";
 import { PORT } from "./config";
 import sessionOptions from "./session/session-options";
 import * as Prometheus from "./prometheus/prometheus";
@@ -31,7 +31,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-router(app);
+route(app);
 
 // Server Setup
 app.listen(PORT, (err: any) => {
