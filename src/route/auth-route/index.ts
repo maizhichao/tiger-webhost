@@ -2,7 +2,13 @@ import { Application, Request, Response } from "express";
 import fs from "fs";
 import { URL } from "url";
 import { ServiceProvider, IdentityProvider } from "samlify";
-import { GUARD_UI_HOST, DEFAULT_SP, STATIC_PATH, WEB_HOST } from "../../config";
+import {
+  GUARD_UI_HOST,
+  DEFAULT_SP,
+  STATIC_PATH,
+  WEB_HOST,
+  SID_NAME
+} from "../../config";
 import { SessionInfo, parseSamlXml } from "./parse-saml-xml";
 import logger from "../../logger";
 
@@ -62,6 +68,7 @@ export default function authRoute(app: Application) {
       const info = await parseSamlXml(req.body.SAMLResponse);
       const session = req.session as Express.Session;
       session.info = info;
+      res.cookie(SID_NAME, session.id);
       res.redirect(callbackURL);
     } catch (err) {
       logger.error("Failed to login:", err);

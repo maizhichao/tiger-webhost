@@ -28,14 +28,14 @@ redisClient.on("error", (err) => {
   logger.error("Redis Error", err);
 });
 const redisStore = connectRedis(session);
-const store = new redisStore({
+export const sessionStore = new redisStore({
   host: TIGER_REDIS_SERVER,
   port: TIGER_REDIS_PORT as number,
   pass: TIGER_REDIS_PWD,
   client: redisClient
 });
 
-const sessionOptions: session.SessionOptions = {
+export const sessionOptions: session.SessionOptions = {
   secret: TIGER_SESSION_SECRET,
   name: "session",
   cookie: {
@@ -45,7 +45,5 @@ const sessionOptions: session.SessionOptions = {
   rolling: true,
   resave: false,
   saveUninitialized: false,
-  store: store
+  store: sessionStore
 };
-
-export default sessionOptions;

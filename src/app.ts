@@ -1,4 +1,4 @@
-// Main starting point of the application
+// Entry point of the application
 import express, { Application } from "express";
 import compression from "compression";
 import lusca from "lusca";
@@ -6,11 +6,19 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import session from "express-session";
+import SocketIO from "socket.io";
+import RedisIO from "socket.io-redis";
 import logger from "./logger";
 import route from "./route";
-import { PORT } from "./config";
-import sessionOptions from "./session/session-options";
+import {
+  PORT,
+  TIGER_REDIS_SERVER,
+  TIGER_REDIS_PORT,
+  TIGER_REDIS_PWD
+} from "./config";
+import { sessionOptions } from "./session/session-store";
 import * as Prometheus from "./prometheus/prometheus";
+import { configureSocketIO } from "./route/mqscaffold";
 
 const app: Application = express();
 
@@ -31,15 +39,26 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Routing setup
 route(app);
 
-// Server Setup
-app.listen(PORT, (err: any) => {
-  if (err) {
-    return logger.error(err);
-  }
+// SocketIO setup
+const io = SocketIO();
+io.adapter(
+  RedisIO({
+    host: TIGER_REDIS_SERVER,
+    port: TIGER_REDIS_PORT as number,
+    auth_pass: TIGER_REDIS_PWD
+  })
+);
+configureSocketIO(io);
+
+// Start http server.
+const server = app.listen(PORT, () => {
   return logger.info("App is listening on port", PORT);
 });
+// Attach server to socket io.
+io.attach(server);
 
 // Prometheus Setup
 Prometheus.injectMetricsRoute(app);

@@ -3,14 +3,12 @@ import request from "request-promise";
 import authRoute from "./auth-route";
 import apiRoute from "./api-route";
 import staticRoute from "./content-route";
-import mqscaffoldRoute from "./mqscaffold-route";
 import logger from "../logger";
 import { STATIC_CDN_PATH } from "../config";
 
 export default function route(app: Application) {
   apiRoute(app);
   authRoute(app);
-  mqscaffoldRoute(app);
   staticRoute(app);
 
   app.get("/*", (req: Request, res: Response) => {
