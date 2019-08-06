@@ -1,13 +1,13 @@
-import amqp, { Message } from "amqplib/callback_api";
-import { TIGER_RABBITMQ_URL, SID_NAME } from "../../config";
+import { SID_NAME } from "../../config";
 import cookieParser from "cookie";
 import logger from "../../logger";
 import _ from "lodash";
 import { sessionStore } from "../../session/session-store";
-import { MQSubscribe } from "./mq-subscription";
 import handleWebConnection from "./connection/web";
 
-async function validateSession(socket: SocketIO.Socket) {
+async function validateSession(
+  socket: SocketIO.Socket
+): Promise<Express.SessionData | undefined | null> {
   return new Promise((resolve, reject) => {
     const sessionId = cookieParser.parse(socket.handshake.headers.cookie)[
       SID_NAME
@@ -18,8 +18,9 @@ async function validateSession(socket: SocketIO.Socket) {
     sessionStore.get(sessionId, (err, session) => {
       if (err) {
         reject(err);
+      } else {
+        resolve(session);
       }
-      resolve(session);
     });
   });
 }
