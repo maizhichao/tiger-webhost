@@ -5,6 +5,7 @@ import lusca from "lusca";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
+import http from "http";
 import session from "express-session";
 import SocketIO from "socket.io";
 import RedisIO from "socket.io-redis";
@@ -21,6 +22,7 @@ import * as Prometheus from "./prometheus/prometheus";
 import { configureSocketIO } from "./route/mqscaffold";
 
 const app: Application = express();
+const server = http.createServer(app);
 
 // App Setup
 app.use(
@@ -43,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 route(app);
 
 // SocketIO setup
-const io = SocketIO();
+const io = SocketIO(server);
 io.adapter(
   RedisIO({
     host: TIGER_REDIS_SERVER,
@@ -54,11 +56,9 @@ io.adapter(
 configureSocketIO(io);
 
 // Start http server.
-const server = app.listen(PORT, () => {
-  return logger.info("App is listening on port", PORT);
+server.listen(PORT, () => {
+  return logger.info("Webserver is listening on port", PORT);
 });
-// Attach server to socket io.
-io.attach(server);
 
 // Prometheus Setup
 Prometheus.injectMetricsRoute(app);
