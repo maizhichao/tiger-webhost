@@ -10,7 +10,7 @@ import session from "express-session";
 import SocketIO from "socket.io";
 import RedisIO from "socket.io-redis";
 import logger from "./logger";
-import route from "./route";
+import { authRoute, apiProxy, staticRoute } from "./route";
 import {
   PORT,
   TIGER_REDIS_SERVER,
@@ -38,11 +38,21 @@ app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(session(sessionOptions));
 app.use(compression());
+
+/**
+ * API proxy has to be configured before
+ * bodyParser middleware which prevents
+ * http-proxy-middleware from proxying
+ * [POST] requests.
+ */
+apiProxy(app);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing setup
-route(app);
+authRoute(app);
+staticRoute(app);
 
 // SocketIO setup
 const io = SocketIO(server);
